@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const SubmitFeedback: React.FC = () => {
   const [content, setContent] = useState("");
+  const [department, setDepartment] = useState(""); // ✅ Add department state
   const [message, setMessage] = useState("");
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const SubmitFeedback: React.FC = () => {
     try {
       const res = await axios.post(
         "http://localhost:5271/api/Feedback/submit",
-        { content },
+        { content, department }, // ✅ Include department
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -33,6 +34,7 @@ const SubmitFeedback: React.FC = () => {
       if (res.status === 200) {
         setMessage("✅ Feedback submitted successfully.");
         setContent("");
+        setDepartment(""); // ✅ Reset
       } else {
         setMessage("Unexpected error occurred.");
       }
@@ -73,6 +75,20 @@ const SubmitFeedback: React.FC = () => {
           className="w-full p-3 border rounded mb-4"
           rows={5}
         ></textarea>
+
+        {/* ✅ Department Selection */}
+        <select
+          value={department}
+          onChange={(e) => setDepartment(e.target.value)}
+          required
+          className="w-full p-3 border rounded mb-4"
+        >
+          <option value="">Select Department</option>
+          <option value="HR">HR</option>
+          <option value="IT">IT</option>
+          <option value="Finance">Finance</option>
+          <option value="Operations">Operations</option>
+        </select>
 
         <div className="flex justify-between">
           <button

@@ -61,15 +61,48 @@ const Dashboard: React.FC = () => {
       <h2 className="text-xl font-semibold mb-3">Feedback List:</h2>
       {feedbacks.length === 0 ? (
         <p className="text-gray-500">No feedbacks available.</p>
+      ) : role === "Admin" ? (
+        // ✅ Admin view: grouped by department
+        <div className="space-y-6">
+          {feedbacks.map((group: any, index: number) => (
+            <div key={index}>
+              <h3 className="text-lg font-bold text-blue-600 mb-2">
+                Department: {group.department}
+              </h3>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {group.feedbacks.map((fb: any) => (
+                  <li key={fb.id} className="bg-gray-100 p-4 rounded shadow-sm">
+                    <p className="mb-1">
+                      <strong>Content:</strong> {fb.content}
+                    </p>
+                    <p className="mb-1">
+                      <strong>Sentiment:</strong> {fb.sentiment}
+                    </p>
+                    <p className="mb-1">
+                      <strong>Department:</strong> {fb.department}
+                    </p>
+                    <p>
+                      <strong>User:</strong> {fb.username}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
       ) : (
+        // ✅ User view: flat list
         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {feedbacks.map((fb) => (
+          {feedbacks.map((fb: any) => (
             <li key={fb.id} className="bg-gray-100 p-4 rounded shadow-sm">
               <p className="mb-1">
                 <strong>Content:</strong> {fb.content}
               </p>
               <p className="mb-1">
                 <strong>Sentiment:</strong> {fb.sentiment}
+              </p>
+              <p className="mb-1">
+                <strong>Department:</strong> {fb.department}
               </p>
               <p>
                 <strong>User:</strong> {fb.username}
