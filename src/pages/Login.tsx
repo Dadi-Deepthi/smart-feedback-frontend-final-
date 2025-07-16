@@ -3,6 +3,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+// Left-side image URL
+const imageUrl = "https://hopefamilycentre.org/wp-content/uploads/2020/09/Feedback.jpg";
+
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -20,56 +23,78 @@ const Login: React.FC = () => {
 
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("role", response.data.role);
+      localStorage.setItem("username", response.data.username);
 
       navigate("/dashboard");
     } catch (error: any) {
       console.log("Login error:", error);
       if (error.response?.status === 401) {
-        setErrorMsg("Invalid username or password.");
+        setErrorMsg("⚠️ Invalid username or password.");
       } else {
-        setErrorMsg("Login failed. Please try again.");
+        setErrorMsg("❌ Login failed. Please try again.");
       }
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form
-        onSubmit={handleLogin}
-        className="bg-white p-8 rounded shadow-md w-96"
-      >
-        <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
-
-        {errorMsg && <p className="text-red-500 mb-3">{errorMsg}</p>}
-
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="w-full p-2 mb-3 border rounded"
+    <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-slate-100 p-6">
+      {/* Left Image Container */}
+      <div className="w-full max-w-xl bg-white/90 backdrop-blur-md p-18 rounded-xl shadow-2xl mb-6 md:mb-0 md:mr-12">
+        <img
+          src={imageUrl}
+          alt="Login Illustration"
+          className="w-full h-auto rounded-xl"
         />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
-        />
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-        >
-          Login
-        </button>
+      </div>
+
+      {/* Right Form Container */}
+      <div className="w-full max-w-md bg-white/90 backdrop-blur-md p-8 rounded-xl shadow-2xl">
+        <h1 className="text-xl text-center text-gray-700 font-semibold mb-2">
+          Welcome to Smart Feedback Portal
+        </h1>
+
+        <h2 className="text-3xl font-bold text-center mb-6 text-blue-700">
+          🔐 Login
+        </h2>
+
+        {errorMsg && (
+          <p className="text-red-600 text-sm text-center mb-2">{errorMsg}</p>
+        )}
+
+        <form onSubmit={handleLogin} className="space-y-4">
+          <input
+            type="text"
+            placeholder="👤 Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
+          />
+
+          <input
+            type="password"
+            placeholder="🔒 Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
+          />
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded transition"
+          >
+            ✅ Login
+          </button>
+        </form>
 
         <p className="mt-4 text-center text-sm">
-          Don't have an account?{" "}
-          <a href="/register" className="text-blue-500 hover:underline">
+          Don’t have an account?{" "}
+          <a href="/register" className="text-green-600 hover:underline">
             Register
           </a>
         </p>
-      </form>
+      </div>
     </div>
   );
 };
