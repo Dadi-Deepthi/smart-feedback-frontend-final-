@@ -21,18 +21,22 @@ const Register: React.FC = () => {
     setSuccessMsg("");
 
     try {
-      const res = await axios.post("http://localhost:5271/api/User/register", {
+      const response = await axios.post("http://localhost:5271/api/User/register", {
         username,
         password,
         role,
       });
 
-      if (res.status === 200) {
+      console.log("✅ Registration success:", response.data);
+
+      if (response.status === 200) {
         setSuccessMsg("🎉 Registration successful! Redirecting to login...");
         setTimeout(() => navigate("/login"), 1500);
       }
-    } catch (err: any) {
-      if (err.response?.status === 400) {
+    } catch (error: any) {
+      console.error("❌ Registration error:", error);
+
+      if (error.response?.status === 400) {
         setErrorMsg("⚠️ Username already exists. Try another one.");
       } else {
         setErrorMsg("❌ Registration failed. Please try again.");
@@ -42,33 +46,20 @@ const Register: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-slate-100 p-6">
-      {/* Left Image Container */}
-<div className="w-full max-w-xl bg-white/90 backdrop-blur-md p-18 rounded-xl shadow-2xl mb-6 md:mb-0 md:mr-12">
-        <img
-          src={imageUrl}
-          alt="Welcome"
-          className="w-full h-auto rounded-xl"
-        />
+      {/* Left Image */}
+      <div className="w-full max-w-xl bg-white/90 backdrop-blur-md p-6 rounded-xl shadow-2xl mb-6 md:mb-0 md:mr-12">
+        <img src={imageUrl} alt="Welcome" className="w-full h-auto rounded-xl" />
       </div>
 
-      {/* Right Form Container */}
+      {/* Right Form */}
       <div className="w-full max-w-md bg-white/90 backdrop-blur-md p-8 rounded-xl shadow-2xl">
         <h1 className="text-xl text-center text-gray-700 font-semibold mb-2">
           Welcome to Smart Feedback Portal
         </h1>
+        <h2 className="text-3xl font-bold text-center mb-6 text-green-700">📝 Register</h2>
 
-        <h2 className="text-3xl font-bold text-center mb-6 text-green-700">
-          📝 Register
-        </h2>
-
-        {errorMsg && (
-          <p className="text-red-600 text-sm text-center mb-2">{errorMsg}</p>
-        )}
-        {successMsg && (
-          <p className="text-green-600 text-sm text-center mb-2">
-            {successMsg}
-          </p>
-        )}
+        {errorMsg && <p className="text-red-600 text-sm text-center mb-2">{errorMsg}</p>}
+        {successMsg && <p className="text-green-600 text-sm text-center mb-2">{successMsg}</p>}
 
         <form onSubmit={handleRegister} className="space-y-4">
           <input
@@ -79,7 +70,6 @@ const Register: React.FC = () => {
             className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-green-400"
             required
           />
-
           <input
             type="password"
             placeholder="🔒 Password"
@@ -88,7 +78,6 @@ const Register: React.FC = () => {
             className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-green-400"
             required
           />
-
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
